@@ -1,23 +1,23 @@
 //Use d3 library to read in samples
 function getPlots(id) {
-    d3.json("samples.json").then (sampledata=>{
-        console.log(sampledata)
-        var ids=sampledata.samples[0].otu_ids;
+    d3.json("samples.json").then (samplesdata=>{
+        console.log(samplesdata)
+        var ids=samplesdata.samples[0].otu_ids;
         console.log(ids)
-        var sampleValues =  sampledata.samples[0].sample_values.slice(0,10).reverse();
+        var sampleValues =  samplesdata.samples[0].sample_values.slice(0,10).reverse();
         console.log(sampleValues)
-        var labels =  sampledata.samples[0].otu_labels.slice(0,10);
+        var labels =  samplesdata.samples[0].otu_labels.slice(0,10);
         console.log (labels)
 
         // top 10 OTUs
-        var otu_top = (sampledata.samples[0].otu_ids.slice(0, 10)).reverse();
+        var otu_top = (samplesdata.samples[0].otu_ids.slice(0, 10)).reverse();
         
         //grab OTUs 
         var otu_id = otu_top.map(d => "OTU" + d);
         console.log(`OTU IDS: ${otu_id}`)
 
         //top 10 for bar graph
-        var labels =  sampledata.samples[0].otu_labels.slice(0,10);
+        var labels =  samplesdata.samples[0].otu_labels.slice(0,10);
         console.log(`OTU_labels: ${labels}`)
         var trace = {
             type: "bar",
@@ -42,20 +42,21 @@ function getPlots(id) {
         };
         Plotly.newPlot("bar", data, layout);
 
-        //NEXT CHART Circle  
+        //NEXT CHART Bubble  
         var trace1 = {
-            x: sampledata.samples[0].otu_ids,
-            y: sampledata.samples[0].sample_values,
+            x: samplesdata.samples[0].otu_ids,
+            y: samplesdata.samples[0].sample_values,
             mode: "markers",
             marker: {
-                color: sampledata.samples[0].otu_ids, 
-                size: sampledata.samples[0].sample_values
+                size: samplesdata.samples[0].sample_values,
+                color: samplesdata.samples[0].otu_ids
             },
-            text:  sampledata.samples[0].otu_labels
+            text:  samplesdata.samples[0].otu_labels
 
         };
 
         var layout_2 = {
+            title: "Bacteria Cultures Per Sample",
             xaxis:{title: "OTU ID"},
             height: 450,
             width: 1200,
@@ -88,12 +89,12 @@ function optionChanged(id) {
 }
 
 function init() {
-    var dropdown = d3.select("#selDataset");
+    var dropdownMenu = d3.select("#selDataset");
 
     d3.json("samples.json").then((data)=> {
         console.log(data)
         data.names.forEach(function(name) {
-            dropdown.append("option").text(name).property("value");
+            dropdownMenu.append("option").text(name).property("value");
         });
 
         getDemoInfo(data.names[0]);
