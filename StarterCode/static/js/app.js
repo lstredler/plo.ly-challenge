@@ -35,7 +35,7 @@ function getPlots(id) {
             },
             margin: {
                 r:75, 
-                t:50,
+                t:55,
                 l:75,
                 b:25
             }
