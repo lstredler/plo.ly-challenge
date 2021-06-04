@@ -1,34 +1,34 @@
-//Use d3 library to read in samples
+//Use d3 library to read in samples data //
 function getPlots(id) {
-    d3.json("samples.json").then (samplesdata=>{
-        console.log(samplesdata)
-        var ids=samplesdata.samples[0].otu_ids;
-        console.log(ids)
-        var sampleValues =  samplesdata.samples[0].sample_values.slice(0,10).reverse();
-        console.log(sampleValues)
-        var labels =  samplesdata.samples[0].otu_labels.slice(0,10);
-        console.log (labels)
+    d3.json("samples.json").then (samples_data=>{
+        console.log(samples_data)
+        var otu_ids=samples_data.samples[0].otu_ids;
+        console.log(otu_ids)
+        var sample_values =  samples_data.samples[0].sample_values.slice(0,10).reverse();
+        console.log(sample_values)
+        var otu_labels =  samples_data.samples[0].otu_labels.slice(0,10);
+        console.log (otu_labels)
 
-        // top 10 OTUs
-        var otu_top = (samplesdata.samples[0].otu_ids.slice(0, 10)).reverse();
+        // add top 10 OTUs constraint/specification //
+        var otu_top = (samples_data.samples[0].otu_ids.slice(0, 10)).reverse();
         
-        //grab OTUs 
+        //grab the otu data  //
         var otu_id = otu_top.map(d => "OTU" + d);
-        console.log(`OTU IDS: ${otu_id}`)
+        console.log(`otu_ids: ${otu_id}`)
 
-        //top 10 for bar graph
-        var labels =  samplesdata.samples[0].otu_labels.slice(0,10);
-        console.log(`OTU_labels: ${labels}`)
-        var trace = {
+        //BAR CHART //
+        var otu_labels =  samples_data.samples[0].otu_labels.slice(0,10);
+        console.log(`otu_labels: ${otu_labels}`)
+        var trace1 = {
             type: "bar",
-            x: sampleValues,
-            y: otu_id,
             orientation: "h",
+            x: sample_values,
+            y: otu_id,
         };
-        // data variable 
-        var data = [trace];
+        // data variable //
+        var data1 = [trace1];
 
-        var layout={
+        var layout1={
             title: "Top 10 Bacteria Cultures Found", 
             yaxis:{
                 tickmode:"linear",
@@ -40,56 +40,37 @@ function getPlots(id) {
                 b:25
             }
         };
-        Plotly.newPlot("bar", data, layout);
+        Plotly.newPlot("bar", data1, layout1);
 
-        //NEXT CHART Bubble  
-        var trace1 = {
-            x: samplesdata.samples[0].otu_ids,
-            y: samplesdata.samples[0].sample_values,
+        //NEXT CHART Bubble //
+        var trace2 = {
+            type: "bubble",
+            x: samples_data.samples[0].otu_ids,
+            y: samples_data.samples[0].sample_values,
             mode: "markers",
             marker: {
-                size: samplesdata.samples[0].sample_values,
-                color: samplesdata.samples[0].otu_ids
+                size: samples_data.samples[0].sample_values,
+                color: samples_data.samples[0].otu_ids
             },
-            text:  samplesdata.samples[0].otu_labels
+            text: samples_data.samples[0].otu_labels
 
         };
-
-        var layout_2 = {
+        //bubble chart layout//
+        var layout2 = {
             title: "Bacteria Cultures Per Sample",
             xaxis:{title: "OTU ID"},
-            height: 450,
+            height: 550,
             width: 1200,
         };
 
         // data variable 
-        var data1 = [trace1];
-    Plotly.newPlot("bubble", data1,layout_2); 
+        var data2 = [trace2];
+    Plotly.newPlot("bubble", data2,layout2); 
     
     });
 }  
-
-function getDemoInfo(id) {
-    d3.json("samples.json").then((data)=> {
-        var metadata = data.metadata;
-
-        console.log(metadata)
-
-       var result = metadata.filter(meta => meta.id.toString() === id)[0];
-       var demographicInfo = d3.select("#sample-metadata");
-       demographicInfo.html("");
-        Object.entries(result).forEach((key) => {   
-            demographicInfo.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n");    
-        });
-    });
-}
-function optionChanged(id) {
-    getPlots(id);
-    getDemoInfo(id);
-}
-
 function init() {
-    var dropdownMenu = d3.select("#selDataset");
+    var dropdownMenu = d3.selectAll("#selDataset");
 
     d3.json("samples.json").then((data)=> {
         console.log(data)
@@ -102,3 +83,22 @@ function init() {
     });
 }
 init();
+
+
+function getDemoInfo(id) {
+    d3.json("samples.json").then((data)=> {
+        var metadata = data.metadata;
+        console.log(metadata)
+        var result = metadata.filter(meta => meta.id.toString() === id)[0];
+        var demoInfo = d3.select("#sample-metadata");
+        demoInfo.html(" ");
+        Object.entries(result).forEach((key) => {   
+            demoInfo.append("h5").text(key[0]+ ": " + key[1] + "\n");    
+        });
+    });
+}
+
+function optionChanged(id) {
+    getPlots(id);
+    getDemoInfo(id);
+}
