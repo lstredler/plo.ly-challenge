@@ -69,6 +69,25 @@ function getPlots(id) {
     
     });
 }  
+
+function getDemoInfo(id) {
+    d3.json("samples.json").then((data)=> {
+        var metadata = data.metadata;
+        console.log(metadata)
+        var result = metadata.filter(meta => meta.id.toString() === id)[0];
+        var demoInfo = d3.select("#sample-metadata");
+        demoInfo.html(" ");
+        Object.entries(result).forEach((key) => {   
+            demoInfo.append("h6").text(key[0]+ ": " + key[1]);    
+        });
+    });
+}
+
+function optionChanged(id) {
+    getPlots(id);
+    getDemoInfo(id);
+}
+
 function init() {
     var dropdownMenu = d3.selectAll("#selDataset");
 
@@ -83,21 +102,3 @@ function init() {
     });
 }
 init();
-
-function getDemoInfo(id) {
-    d3.json("samples.json").then((data)=> {
-        var metadata = data.metadata;
-        console.log(metadata)
-        var result = metadata.filter(meta => meta.id.toString() === id)[0];
-        var demoInfo = d3.select("#sample-metadata");
-        demoInfo.html(" ");
-        Object.entries(result).forEach((key) => {   
-            demoInfo.append("h5").text(key[0]+ ": " + key[1] + "\n");    
-        });
-    });
-}
-
-function optionChanged(id) {
-    getPlots(id);
-    getDemoInfo(id);
-}
