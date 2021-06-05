@@ -8,7 +8,7 @@ function getPlots(id) {
         console.log(sample_values)
         var otu_labels =  samples_data.samples[0].otu_labels.slice(0,10);
         console.log (otu_labels)
-
+        
         // add top 10 OTUs constraint/specification //
         var otu_top = (samples_data.samples[0].otu_ids.slice(0, 10)).reverse();
         
