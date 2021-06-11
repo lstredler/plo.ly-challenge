@@ -1,1 +1,1 @@
-# plo.ly-challenge
+# plot.ly-challenge
